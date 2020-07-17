@@ -134,12 +134,12 @@ class game:
     def check_top_card(self,cards_with_person):
         #List to store the top card of each player
         top_cards=[]
-        #since a is top card in face off let's change the value of a to 13
+        #since a is top card in face off let's change the value of a to 14
         max_top_card_value=0
         for i in range(len(cards_with_person)):
             cards=cards_with_person[i].get_cards()
             if cards[0][0]==1 or cards[1][0]==1 or cards[2][0]==1:
-                max_val=13
+                max_val=14
                 top_cards.append(max_val)
                 max_top_card_value=max(max_top_card_value,max_val)
             else:
@@ -165,12 +165,13 @@ class game:
         for i in range(12,52,tied_player_count):
             max_value=0
             picked_cards=[]
-            if i+tied_player_count>=52:
+            if i+tied_player_count>52:
                 break
             for j in range(i,i+tied_player_count):
                 card_1=card_deck[j][0]
+                #since card a has highest value in faceoff we change it's value to 14
                 if card_1==1:
-                    card_1=13
+                    card_1=14
                 picked_cards.append(card_1)
                 max_value=max(max_value,card_1)
             count=0
