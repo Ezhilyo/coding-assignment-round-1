@@ -12,13 +12,18 @@ class deck_of_cards:
     card_types=['h','c','j','s']
     def __init__(self):
         temp=[]
+        tuples=[]
         for card_type in deck_of_cards.card_types:
             for num in range(1,14):
                 new_card=card(num,card_type)
                 temp.append(new_card)
+                tuples.append((num,card_type))
         self.cards=temp
-    def get_deck(self):
+        self.tuples=tuples
+    def get_deck_as_card_class(self):
         return self.cards
+    def get_card_as_tuples(self):
+        return self.tuples
 
 class person:
     def __init__(self,num,recieved_cards):
@@ -39,7 +44,7 @@ class game:
         #create a deck of cards
         card_deck_obj=deck_of_cards()
         #get the 52 cards
-        card_deck=card_deck_obj.get_deck()
+        card_deck=card_deck_obj.get_card_as_tuples()
         #shuffle the cards
         random.shuffle(card_deck)
         self.card_deck=card_deck
@@ -58,9 +63,10 @@ class game:
             #while dealing cards with 4, each person gets a card after 3 deals 
             card_indices_for_this_person=[j for j in range(i,12,no_of_players)]
             #create a dictionary to store the card
-            cards_for_this_person=[(int(cards[k].get_val()),cards[k].get_card_type()) for k in card_indices_for_this_person]
+            cards_for_this_person=[(cards[k][0],cards[k][1]) for k in card_indices_for_this_person]
             #sort the list
             cards_for_this_person.sort()
+            # print(cards_for_this_person)
             #create a person with person number and recieved cards
             p1=person(i,cards_for_this_person)
             #append p1 to the list
@@ -85,7 +91,7 @@ class game:
             check4,winner=self.random_pick(tied_players)
             if check4:
                 return winner
-        return "Draw"
+        return None
     
     def is_three_numbers_same(self,cards_with_person):
         count=0
@@ -104,9 +110,11 @@ class game:
         winner=None
         for i in range(len(cards_with_person)):
             cards=cards_with_person[i].get_cards()
-            if cards[0][0]==cards[1][0]-1 and cards[2][0]==cards[1][0]-1:
+            # print(cards)
+            if cards[0][0]==cards[1][0]-1 and cards[1][0]==cards[2][0]-1:
                 count+=1
                 winner=i
+        # print(count)
         if count!=1:
             return None,None
         return True,winner
@@ -142,7 +150,7 @@ class game:
         tied_players=[]
         for i in range(len(top_cards)):
             if top_cards[i]==max_top_card_value:
-                tied_players.append(top_cards[i])
+                tied_players.append(i)
                 winner=i
         count=len(tied_players)
         if count>1:
@@ -151,13 +159,16 @@ class game:
 
     def random_pick(self,tied_players):
         #since 12 cards have been dealt already, we have to start picking from 13th card from deck
+        #print(tied_players)
         card_deck=self.card_deck
         tied_player_count=len(tied_players)
         for i in range(12,52,tied_player_count):
             max_value=0
             picked_cards=[]
+            if i+tied_player_count>=52:
+                break
             for j in range(i,i+tied_player_count):
-                card_1=card_deck[j].get_val()
+                card_1=card_deck[j][0]
                 if card_1==1:
                     card_1=13
                 picked_cards.append(card_1)
