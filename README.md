@@ -1,4 +1,4 @@
-# coding-assignment-round-1
+# Card Game Simulater
 ## These are the rules for the custom card game
 - Use a standard deck of cards (no Joker).
 - Each player is dealt only three cards.
