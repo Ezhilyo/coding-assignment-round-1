@@ -34,7 +34,7 @@ output_4=[
     [(2,'h'),(8,'c'),(9,'s')],
     [(1,'j'),(1,'s'),(2,'s')],
     [(4,'s'),(6,'j'),(12,'j')],
-    [(7,'j'),(13,'c'),(13,'h'),]
+    [(7,'j'),(13,'c'),(13,'h')]
 ]
 test_case5=[
     person(0,[(1,'j'),(5,'c'),(9,'j')]),
@@ -42,6 +42,20 @@ test_case5=[
     person(2,[(1,'c'),(10,'j'),(12,'j')]),
     person(3,[(1,'h'),(5,'s'),(6,'c')])
 ]
+test_case6=[
+(4, 'h'), (9, 'c'), (12, 'j'), (5, 'c'), 
+(4, 's'), (9, 'h'), (6, 'j'), (3, 'h'), 
+(6, 's'), (1, 'c'), (8, 'c'), (10, 's'), 
+(4, 'j'), (7, 's'), (9, 'j'), 
+(7, 'j'),(13, 'c'), (11, 'c'),
+ (10, 'c'), (5, 's'), (2, 'c'), 
+ (8, 'h'), (3, 's'), 
+(6, 'h'), (1, 'j'), (2, 'j'), (7, 'h'), (6, 'c'), (7, 'c'), (11, 'j'), (12, 'c'), 
+(8, 's'), (3, 'j'), (10, 'j'), (2, 's'), (8, 'j'), (12, 's'), (5, 'j'), (5, 'h'), (13, 's'), 
+(2, 'h'), (3, 'c'), (9, 's'), (13, 'h'), (10, 'h'), (13, 'j'), (1, 's'), (11, 's'), (12, 'h'), 
+(1, 'h'), (11, 'h'), (4, 'c')
+]
+
 
 class test_game_class(unittest.TestCase):
     def setUp(self):
@@ -77,12 +91,22 @@ class test_game_class(unittest.TestCase):
             output_list.append(p.get_cards())
         self.assertEqual(output_list,output_4)
 
+    def test_random_pick_function(self):
+        new_game=game()
+        #let's assume the all the top cards are equal at the end and all players are tied
+        #we consider only the cards from 13th card to 52nd card for testing this
+        new_game.card_deck=test_case4
+        self.assertEqual(new_game.random_pick([0,1,2,3]),(True,1))
+        #let's assume the all the top cards are equal at the end and 3 players are tied
+        new_game.card_deck=test_case6
+        self.assertEqual(new_game.random_pick([0,1,3]),(True,3))
+
     def test_check_winner_function(self):
         new_game=game()
+        new_game.simulate_new_game()
         self.assertEqual(new_game.check_winner(test_case1),0)
         self.assertEqual(new_game.check_winner(test_case2),2)
         self.assertEqual(new_game.check_winner(test_case3),3)
-        self.assertEqual(new_game.check_winner(test_case5),None)
 
 if __name__ == '__main__': 
     unittest.main()
